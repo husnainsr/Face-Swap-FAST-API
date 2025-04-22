@@ -25,6 +25,52 @@ A REST API for face-swapping functionality built with FastAPI, OpenCV, and Insig
 ![Title Image](assets/title_page.png)
 
 </div>
+
+## Authentication System
+
+The API implements a dual-layer authentication system:
+
+1. **Admin Authentication**: 
+   - Uses the `X-Admin-Key` header with a pre-configured secret key
+   - Required for all token management operations
+   - Provides complete control over API token lifecycle
+   - Secured with environment variable configuration
+
+2. **Client Authentication**:
+   - Uses the `X-API-Key` header with a valid token ID
+   - Tokens are UUID-based and stored in MongoDB
+   - Each API call is logged and counted against the token
+   - Tokens can be revoked by administrators
+
+This separation ensures proper access control and allows for monitoring of API usage patterns.
+
+## Face Swapping Technology
+
+This API leverages InsightFace's advanced face swapping capabilities:
+
+- **Model**: Uses the inswapper_128.onnx model (~120MB) from InsightFace
+- **Resolution**: Supports high-resolution image swapping (up to 4K)
+- **Detection**: Buffalo_L face detector provides accurate face localization
+- **Speed**: Optimized for performance on CPU environments
+- **Quality**: Preserves facial expressions, lighting, and skin tones
+
+The implementation handles multiple faces in target images, automatically downloading required models, and providing proper error handling for failed detections.
+
+## Security Measures
+
+The API incorporates several security features:
+
+- **Token-based Authorization**: All sensitive endpoints require valid tokens
+- **Temporary File Management**: Images are stored with random UUIDs to prevent enumeration
+- **Automatic Cleanup**: All processed images are deleted after 24 hours
+- **MongoDB Security**: Connection strings and credentials stored in environment variables
+- **Input Validation**: All incoming requests are validated before processing
+- **Error Handling**: Errors are properly caught and reported without exposing sensitive details
+- **Image Verification**: Uploaded images are verified for integrity before processing
+
+
+
+
 ## Requirements
 
 - Python 3.9+
